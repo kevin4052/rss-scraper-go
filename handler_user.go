@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/kevin4052/rss-scraper-go/internal/auth"
 	"github.com/kevin4052/rss-scraper-go/internal/database"
 )
 
@@ -30,6 +31,22 @@ func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 	})
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Could not create user: %v", err))
+		return
+	}
+
+	respondWithJSON(w, 201, databaseUserToUser(user))
+}
+
+func (apiCfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request) {
+	apiKey, err := auth.GetAPIKey(r.Header)
+	if err != nil {
+		respondWithError(w, 403, fmt.Sprintf("Auth err: %v", err))
+		return
+	}
+
+	user, err := apiCfg.DB.GetUserByAPIKey(r.Context(), apiKey)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Could not find user: %v", err))
 		return
 	}
 

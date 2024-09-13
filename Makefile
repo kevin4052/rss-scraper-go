@@ -3,3 +3,6 @@ build:
 
 run: build
 	./bin/server
+
+sqlcGen:
+	sqlc generate

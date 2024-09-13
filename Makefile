@@ -1,8 +1,8 @@
 build:
-	go build -o ./bin/server
+	@go build -o ./bin/server
 
 run: build
-	./bin/server
+	@./bin/server
 
 sqlcGen:
-	sqlc generate
+	@sqlc generate

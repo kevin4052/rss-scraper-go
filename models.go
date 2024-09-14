@@ -68,7 +68,7 @@ func databaseFeedFollowToFeedFollow(dbFeedFollow database.FeedFollow) FeedFollow
 		CreatedAt: dbFeedFollow.CreatedAt,
 		UpdatedAt: dbFeedFollow.UpdatedAt,
 		UserID:    dbFeedFollow.UserID,
-		FeedID:    dbFeedFollow.ID,
+		FeedID:    dbFeedFollow.FeedID,
 	}
 }
 

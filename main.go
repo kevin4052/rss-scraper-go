@@ -4,13 +4,12 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
-	"github.com/joho/godotenv"
 	"github.com/kevin4052/rss-scraper-go/internal/database"
+	"github.com/kevin4052/rss-scraper-go/internal/utils"
 
 	_ "github.com/lib/pq"
 )
@@ -20,16 +19,14 @@ type apiConfig struct {
 }
 
 func main() {
-	godotenv.Load(".env")
-
-	portString := os.Getenv("PORT")
+	portString := utils.GetEnvVariable("PORT")
 	if portString == "" {
 		log.Fatal("PORT is not found in the environment")
 	}
 
-	dbUrl := os.Getenv("DB_URL")
+	dbUrl := utils.GetEnvVariable("DB_URL_PROD")
 	if dbUrl == "" {
-		log.Fatal("DB_URL is not found in the environment")
+		log.Fatal("DB_URL_PROD is not found in the environment")
 	}
 
 	conn, err := sql.Open("postgres", dbUrl)
@@ -42,7 +39,7 @@ func main() {
 		DB: db,
 	}
 
-	go startScraping(db, 10, time.Minute)
+	go startScraping(db, 10, 5*time.Minute)
 
 	router := chi.NewRouter()
 	router.Use(cors.Handler(cors.Options{
